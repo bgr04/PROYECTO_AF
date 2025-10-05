@@ -1,0 +1,101 @@
+body {
+  background-color: #f8f9fa;
+}
+
+/* NAVBAR BASE */
+.navbar {
+  background-color: #01111a !important;
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .dropdown-toggle {
+  color: #d9d9d9 !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Hover links */
+.navbar .nav-link:hover,
+.navbar .dropdown-toggle:hover {
+  color: #181818 !important;
+  background-color: #dcdcdc;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+/* DROPDOWN MENU */
+.navbar .dropdown-menu {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+}
+
+.navbar .dropdown-item {
+  transition: all 0.3s ease;
+}
+
+.navbar .dropdown-item:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+/* CARD KPI */
+.card-kpi {
+  border-left: 5px solid #032250;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card-kpi h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  height: 300px;
+}
+
+/* SUBRAYADO ACTIVO (FIJO) */
+.navbar .nav-link {
+  position: relative;
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 2px;
+  background-color: #21ade5;
+  border-radius: 2px;
+  opacity: 0; /* invisible por defecto */
+  transition: opacity 0.3s ease;
+}
+
+/* SIEMPRE visible si está activo */
+.navbar .nav-link.active::after {
+  opacity: 1;
+}
+
+/* HOVER - también muestra subrayado */
+.navbar .nav-link:hover::after {
+  opacity: 1;
+}
+
+/* ---------- ▼ FLECHITA CON FA ▼ ----------- */
+/* Flechita visible y alineada */
+.navbar .dropdown-arrow {
+  font-size: 0.65rem;
+  transition: transform 0.3s ease;
+  margin-left: 4px;
+}
+
+/* Rota la flechita cuando el dropdown está abierto */
+.navbar .nav-item.dropdown.show .dropdown-arrow {
+  transform: rotate(180deg);
+}

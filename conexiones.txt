@@ -1,0 +1,18 @@
+[DEFAULT]
+default = db_local
+
+[Base BDD AF]
+driver = ODBC Driver 18 for SQL Server
+server = DANALIBAR14
+database = BDD_AF
+uid = prueba
+pwd = 1234
+TrustServerCertificate = yes
+
+[Base PRUEBA AF]
+driver = ODBC Driver 18 for SQL Server
+server = DANALIBAR14
+database = PRUEBA_AF
+uid = prueba
+pwd = 1234
+TrustServerCertificate = yes
