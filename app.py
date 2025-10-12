@@ -4,6 +4,7 @@ from moduls.dashboard import dashboard_bp
 from moduls.conexionsql import cargar_conexiones
 from moduls.decorators import login_required, login_required_ajax
 from moduls.admin import admin_bp 
+from moduls.rutas_usuario import rutas_usuario_bp
 
 app = Flask(__name__)
 app.secret_key = "jKJwELCx2u3eUS6x4cZyCC1dYNOql66Wf1AlDVG2R8YS8hQ8TEQVkhp2rV7DBuqFAXwdVLfMUd7w5okeVJcLfgeFbaOIAA=="
@@ -12,6 +13,8 @@ app.secret_key = "jKJwELCx2u3eUS6x4cZyCC1dYNOql66Wf1AlDVG2R8YS8hQ8TEQVkhp2rV7DBu
 app.register_blueprint(login_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(admin_bp)
+app.register_blueprint(rutas_usuario_bp)
+
 
 @app.route("/")
 def home():

@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="icon" href="/static/icon-dashboard.png" type="image/x-icon">
-    <title>Dashboard</title>
+    <link rel="icon" href="/static/icon-proveedores.png" type="image/x-icon">
+    <title>Catálogo de Proveedores</title>
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -33,7 +33,6 @@
     function noBack() { window.history.forward(); }
     </script>
 </head>
-
 <body onload="noBack();" onpageshow="if (event.persisted) noBack();">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid" id="navbar2">
@@ -142,61 +141,8 @@
       </div>
     </div>
   </nav>
-
-<div class="container mt-4">
-    <!-- Indicadores -->
-    <div class="row g-4 mb-4">
-      <div class="col-md-4">
-        <div class="card card-kpi p-3">
-          <h5>Días restantes de licencia:</h5>
-            {% if dias_restantes is not none %}
-            {% if dias_restantes == 0 %}
-          <h3 class="text-danger">Licencia expirada</h3>
-            {% elif dias_restantes <= 7 %}
-          <h3 class="text-warning">{{ dias_restantes }} día{{ 's' if dias_restantes > 1 else '' }} restante{{ 's' if dias_restantes > 1 else '' }}</h3>
-            {% else %}
-          <h3 class="text-success">{{ dias_restantes }} día{{ 's' if dias_restantes > 1 else '' }} restante{{ 's' if dias_restantes > 1 else '' }}</h3>
-            {% endif %}
-            {% else %}
-            <h3 class="text-muted">Sin licencia válida</h3>
-            {% endif %}
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card card-kpi p-3">
-          <h5>AF próximos a vencer</h5>
-          <h3 class="text-danger">12 activos</h3>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card card-kpi p-3">
-          <h5>Usuarios activos</h5>
-          <h3 class="text-success">45</h3>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gráficas -->
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="card p-3">
-          <h5 class="text-center">Distribución de Activos</h5>
-          <div class="chart-container">
-            <canvas id="chartPie"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card p-3">
-          <h5 class="text-center">Activos por Área</h5>
-          <div class="chart-container">
-            <canvas id="chartBar"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  
+  
   <script>
     function noBack() {
       window.history.forward();
@@ -204,50 +150,4 @@
     setTimeout("noBack()", 0);
     window.onunload = function () { null };
   </script>
-  
-    <!-- <script>
-    // Pie Chart
-    new Chart(document.getElementById('chartPie'), {
-      type: 'pie',
-      data: {
-        labels: ['Vehículos', 'Maquinaria', 'Equipos', 'Otros'],
-        datasets: [{
-          data: [30, 25, 20, 25],
-          backgroundColor: ['#42a5f5','#66bb6a','#ffa726','#ef5350']
-        }]
-      }
-    });
-
-    // Bar Chart
-    new Chart(document.getElementById('chartBar'), {
-      type: 'bar',
-      data: {
-        labels: ['Producción','Ventas','Administración','Logística'],
-        datasets: [{
-          label: 'Número de Activos',
-          data: [12, 19, 7, 14],
-          backgroundColor: '#42a5f5'
-        }]
-      },
-      options: {
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-  </script>
-    <script>
-        function salir() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Cerrando sesión...',
-                timer: 1000,
-                showConfirmButton: false,
-                willClose: () => {
-                    window.location.href = "{{ url_for('login.logout') }}";
-                }
-            });
-        }
-    </script> -->
-<script src="static/js/chartbody.js"></script>
-<script src="static/js/logout.js"></script>
 </body>
-</html>
