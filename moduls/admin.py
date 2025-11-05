@@ -1,14 +1,11 @@
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from .conexionsql import cargar_conexiones, get_connection
-from .decorators import login_required
+from .__init__ import login_required
 from .license_validator import validate_license
-from moduls.sentencias import DatosGenerales
+from sqlalchemy import text 
 
 admin_bp = Blueprint("admin", __name__)
 
-# ----------------------------------------------------------------------
-# Vista principal de administración
-# ----------------------------------------------------------------------
 @admin_bp.route("/admin")
 @login_required
 def access_view():
@@ -25,14 +22,15 @@ def access_view():
                 datos_generales[modulo] = {"error": "No se pudo establecer sesión"}
                 continue
 
-            registros = db_session.query(DatosGenerales).all()
-            headers = ["RAZONSOCIAL", "RFC", "DIRECCION1", "NUM_PROGRAMA", "CERTIFICACION1", "LICENCIA"]
-            rows = [
-                (d.RAZONSOCIAL, d.RFC, d.DIRECCION1, d.NUM_PROGRAMA, d.CERTIFICACION1, d.LICENCIA)
-                for d in registros
-            ]
+            registros = db_session.execute(
+            text("EXEC SP_DatosGenerales @accion = :accion"),
+            {"accion": 1}).mappings().all()
+            
+            headers = [col for col in registros[0].keys() if col != 'DatosGeneralesKey'] if registros else []
+            rows = [tuple(row.values()) for row in registros]
 
             datos_generales[modulo] = {"headers": headers, "rows": rows}
+        
         except Exception as e:
             datos_generales[modulo] = {"error": str(e)}
         finally:
@@ -40,22 +38,31 @@ def access_view():
                 db_session.close()
 
     return render_template("access.html", datos_generales=datos_generales)
-# ----------------------------------------------------------------------
-# Guardar datos en un módulo específico
-# ----------------------------------------------------------------------
+
+
 @admin_bp.route("/admin/guardar/<modulo>", methods=["POST"])
 @login_required
 def guardar_datos(modulo):
     if session.get("usuario") != "sysadmin":
         return redirect(url_for("home"))
 
-    razon_social = request.form.get("razon_social")
-    rfc = request.form.get("rfc")
-    direccion1 = request.form.get("direccion1")
-    num_programa = request.form.get("num_programa")
-    certificacion1 = request.form.get("certificacion1")
-    licencia = request.form.get("licencia")
+    id_registro = request.form.get("id")
+    print("ID recibido:", id_registro)
+
     rfc_original = request.form.get("rfc_original")
+    rfc = request.form.get("RFCTaxId")
+    razon_social = request.form.get("RazonSocial")
+    calle = request.form.get("Calle")
+    num_exterior = request.form.get("NumExterior")
+    num_interior = request.form.get("NumInterior")
+    colonia = request.form.get("Colonia")
+    codigo_postal = request.form.get("CodigoPostal")
+    municipio = request.form.get("Municipio")
+    estado = request.form.get("Estado")
+    pais = request.form.get("Pais")
+    numero_programa = request.form.get("NumeroPrograma")
+    certificacion = request.form.get("Certificacion")
+    licencia = request.form.get("Licencia")
 
     if not rfc or not licencia:
         flash("RFC y licencia son obligatorios.", "danger")
@@ -72,27 +79,48 @@ def guardar_datos(modulo):
             flash(f"No se pudo establecer sesión para el módulo {modulo}", "danger")
             return redirect(url_for("admin.access_view"))
 
-        registro = db_session.query(DatosGenerales).filter_by(RFC=rfc_original).first()
-        if registro:
-            registro.RAZONSOCIAL = razon_social
-            registro.RFC = rfc
-            registro.DIRECCION1 = direccion1
-            registro.NUM_PROGRAMA = num_programa
-            registro.CERTIFICACION1 = certificacion1
-            registro.LICENCIA = licencia
-        else:
-            # Si no existe el registro, puedes crear uno nuevo o lanzar error según tu lógica
-            nuevo_registro = DatosGenerales(
-                RAZONSOCIAL=razon_social,
-                RFC=rfc,
-                DIRECCION1=direccion1,
-                NUM_PROGRAMA=num_programa,
-                CERTIFICACION1=certificacion1,
-                LICENCIA=licencia
-            )
-            db_session.add(nuevo_registro)
+        result = db_session.execute(
+            text("""
+                EXEC SP_DatosGenerales 
+                    @accion=:accion,
+                    @DatosGeneralesKey=:DatosGeneralesKey,
+                    @RFCTaxId=:RFCTaxId,
+                    @RazonSocial=:RazonSocial,
+                    @Calle=:Calle,
+                    @NumExterior=:NumExterior,
+                    @NumInterior=:NumInterior,
+                    @Colonia=:Colonia,
+                    @CodigoPostal=:CodigoPostal,
+                    @Municipio=:Municipio,
+                    @Estado=:Estado,
+                    @Pais=:Pais,
+                    @NumeroPrograma=:NumeroPrograma,
+                    @Certificacion=:Certificacion,
+                    @Licencia=:Licencia
+            """),
+            {
+                "accion": 2,  # Acción de actualización
+                "DatosGeneralesKey": id_registro,
+                "RFCTaxId": rfc,
+                "RazonSocial": razon_social,
+                "Calle": calle,
+                "NumExterior": num_exterior,
+                "NumInterior": num_interior,
+                "Colonia": colonia,
+                "CodigoPostal": codigo_postal,
+                "Municipio": municipio,
+                "Estado": estado,
+                "Pais": pais,
+                "NumeroPrograma": numero_programa,
+                "Certificacion": certificacion,
+                "Licencia": licencia
+            }
+        )
 
+        print("Resultado del SP:", result)
+        
         db_session.commit()
+
         flash({
             "tipo": "guardar",
             "rfc": rfc,
@@ -101,11 +129,14 @@ def guardar_datos(modulo):
         }, "success_license")
 
     except Exception as e:
+        db_session.rollback()  # Revertir cambios en caso de error
         flash(f"Error al actualizar en {modulo}: {e}", "danger")
+
     finally:
         if 'db_session' in locals():
             db_session.close()
 
+    # Redirigir después de que todo haya sucedido
     return redirect(url_for("admin.access_view"))
 
 
@@ -115,8 +146,9 @@ def validar_licencia():
     if session.get("usuario") != "sysadmin":
         return redirect(url_for("home"))
 
-    rfc = request.form.get("rfc")
-    licencia = request.form.get("licencia")
+    # Alinear con los nombres reales del formulario
+    rfc = request.form.get("RFCTaxId")
+    licencia = request.form.get("Licencia")
 
     if not rfc or not licencia:
         flash("RFC y licencia son obligatorios para la validación.", "danger")
@@ -133,4 +165,3 @@ def validar_licencia():
         }, "success_license")
 
     return redirect(url_for("admin.access_view"))
-

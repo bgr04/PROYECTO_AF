@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="icon" href="/static/icon_datosgenerales.png" type="image/x-icon">
+    <link rel="icon" href="/static/img/icon_datosgenerales.png" type="image/x-icon">
     <title>Catálogo Datos Generales</title>
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="/static/style_dashboard.css">
+    <link rel="stylesheet" href="/static/style_datosgrales.css">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
@@ -39,7 +40,7 @@
 
       <!-- Marca / logo + eslogan -->
       <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard.dashboard') }}">
-        <img src="/static/chatimagen3.png"
+        <img src="/static/img/chatimagen3.png"
              alt="Logo"
              id="icono"
              class="me-2" style="width: 150px; height: 48px; object-fit: contain;">
@@ -142,7 +143,219 @@
     </div>
   </nav>
   
+  <div class="container mt-4 mb-5">
+    {% if datos %}
+    <form id="form-datos-generales" method="POST">
+      <input type="hidden" name="DatosGeneralesKey" value="{{ datos.DatosGeneralesKey }}">
+      <input type="hidden" name="RFCTaxId" value="{{ datos.RFCTaxId }}">
+      <input type="hidden" name="RazonSocial" value="{{ datos.RazonSocial }}">
+      <input type="hidden" name="Licencia" value="{{ datos.Licencia }}">
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <span>{{datos.RazonSocial}} ({{ datos.RFCTaxId }})</span>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="editarSwitch">
+                <label class="form-check-label" for="editarSwitch">Editar</label>
+              </div> 
+            </div>
+            
+            <div class="card-body">
+              <div class="section-header mb-4">
+                <h5 class="section-title">
+                  <i class="fa-solid fa-building me-2"></i>
+                </h5>
+                <hr class="section-divider mb-0">
+              </div>
+
+                <div class="row mb-5">
+                    <div class="col-md-6">
+                        <label class="form-label">Número Programa</label>
+                        <input type="text" class="form-control editable" name="NumeroPrograma" value="{{ datos.NumeroPrograma or '' }}" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Certificación</label>
+                        <input type="text" class="form-control editable" name="Certificacion" value="{{ datos.Certificacion or '' }}" disabled>
+                    </div>
+                </div>
+
+                <div class="section-header mb-4">
+                  <h5 class="section-title">
+                    <i class="fa-solid fa-location-dot me-2"></i>
+                  </h5>
+                  <hr class="section-divider mb-0">
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Calle</label>
+                        <input type="text" class="form-control editable" name="Calle" value="{{ datos.Calle or '' }}"disabled>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">N° Exterior</label>
+                        <input type="text" class="form-control editable" name="NumExterior" value="{{ datos.NumExterior or '' }}" disabled>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">N° Interior</label>
+                        <input type="text" class="form-control editable" name="NumInterior" value="{{ datos.NumInterior or '' }}" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Colonia</label>
+                        <input type="text" class="form-control editable" name="Colonia" value="{{ datos.Colonia or '' }}" disabled>
+                    </div>
+                </div>
+
+                <div class="row mb-3">                    
+                    <div class="col-md-3">
+                        <label class="form-label">Código Postal</label>
+                        <input type="text" class="form-control editable" name="CodigoPostal" value="{{ datos.CodigoPostal or '' }}" disabled>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Municipio</label>
+                        <input type="text" class="form-control editable" name="Municipio" value="{{ datos.Municipio or '' }}" disabled>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Estado</label>
+                        <input type="text" class="form-control editable" name="Estado" value="{{ datos.Estado or '' }}" disabled>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">País</label>
+                        <input type="text" class="form-control editable" name="Pais" value="{{ datos.Pais or '' }}" disabled>
+                    </div>
+                </div>
+
+                <div class="botones-accion" id="botones-accion">
+                  <button type="submit" class="btn btn-guardar me-2">
+                    <i class="fa-solid fa-save me-1"></i> Guardar cambios
+                  </button>
+                  <button type="button" class="btn btn-cancelar" id="btn-cancelar">
+                    <i class="fa-solid fa-xmark me-1"></i> Cancelar
+                  </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% else %}
+        <div class="alert alert-warning text-center">No se encontraron datos generales para mostrar.</div>
+    {% endif %}
+</div>
   
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const editarSwitch = document.getElementById("editarSwitch");
+  const inputs = document.querySelectorAll(".editable");
+  const botones = document.getElementById("botones-accion");
+  const btnCancelar = document.getElementById("btn-cancelar");
+  const form = document.getElementById("form-datos-generales");
+
+  const valoresOriginales = {};
+  inputs.forEach(input => valoresOriginales[input.name] = input.value);
+
+  // Detectar si hay cambios
+  let hayCambios = false;
+  inputs.forEach(input => {
+    input.addEventListener("input", () => {
+      hayCambios = Object.keys(valoresOriginales).some(
+        name => valoresOriginales[name] !== document.querySelector(`[name="${name}"]`).value
+      );
+    });
+  });
+
+  // Activar edición
+  editarSwitch.addEventListener("change", () => {
+    const habilitar = editarSwitch.checked;
+    inputs.forEach(input => input.disabled = !habilitar);
+    botones.style.display = habilitar ? "block" : "none";
+
+    if (!habilitar) {
+      inputs.forEach(input => input.value = valoresOriginales[input.name]);
+      hayCambios = false;
+    }
+  });
+
+  // Cancelar cambios con confirmación
+  btnCancelar.addEventListener("click", (e) => {
+    if (hayCambios) {
+      Swal.fire({
+        title: "¿Deseas cancelar los cambios?",
+        text: "Los datos modificados se perderán.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, cancelar",
+        cancelButtonText: "No, continuar editando",
+        reverseButtons: true,
+        cancelButtonColor: "#028128", 
+  confirmButtonColor: "#dd0202",
+  background: "#fff0e2", 
+      }).then((result) => {
+        if (result.isConfirmed) {
+          restaurarValores();
+        }
+      });
+    } else {
+      restaurarValores();
+    }
+  });
+
+  function restaurarValores() {
+    inputs.forEach(input => {
+      input.value = valoresOriginales[input.name];
+      input.disabled = true;
+    });
+    editarSwitch.checked = false;
+    botones.style.display = "none";
+    hayCambios = false;
+  }
+
+  // Guardar cambios vía AJAX
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    Swal.fire({
+      title: "¿Deseas guardar los cambios?",
+      icon: "question",      
+      confirmButtonText: "Guardar",
+      cancelButtonText: "Cancelar",
+      showCancelButton: true,
+      reverseButtons: false,
+      confirmButtonColor: "#028128", 
+  cancelButtonColor: "#dd0202"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch("{{ url_for('rutas.actualizar_datos_generales') }}", {
+          method: "POST",
+          body: formData
+        })
+        .then(response => response.json().catch(() => ({ status: "error", message: "Respuesta inválida del servidor." })))
+        .then(data => {
+          if (data.status === "success") {
+            Swal.fire({
+              title: "¡Correcto!",
+              text: data.message,
+              icon: "success",
+              timer: 2000,
+              showConfirmButton: false
+            });
+            Object.keys(valoresOriginales).forEach(
+              name => valoresOriginales[name] = document.querySelector(`[name="${name}"]`).value
+            );
+            restaurarValores();
+          } else {
+            Swal.fire("Error", data.message || "No se pudo actualizar.", "error");
+          }
+        })
+        .catch(() => {
+          Swal.fire("Error", "Ocurrió un problema al guardar los datos.", "error");
+        });
+      }
+    });
+  });
+});
+</script>
+
+
   <script>
     function noBack() {
       window.history.forward();

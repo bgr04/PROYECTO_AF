@@ -10,10 +10,18 @@ class Usuario(Base):
     ACTIVO = Column(Integer)
 
 class DatosGenerales(Base):
-    __tablename__ = "T_datosgenerales"
-    RFC = Column(String, primary_key=True)
-    RAZONSOCIAL = Column(String)
-    DIRECCION1 = Column(String)
-    NUM_PROGRAMA = Column(String)
-    CERTIFICACION1 = Column(String)
-    LICENCIA = Column(String)
+    __tablename__ = "DatosGenerales"
+    DatosGeneralesKey = Column(Integer, primary_key=True)
+    RFCTaxId = Column(String)
+    RazonSocial = Column(String)
+    Calle = Column(String)
+    NumExterior = Column(String)
+    NumInterior = Column(String)
+    Colonia = Column(String)
+    CodigoPostal = Column(String)
+    Municipio = Column(String)
+    Estado = Column(String)
+    Pais = Column(String)
+    NumeroPrograma = Column(String)
+    Certificacion = Column(String)
+    Licencia = Column(String)

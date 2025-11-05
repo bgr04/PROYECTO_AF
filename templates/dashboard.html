@@ -40,7 +40,7 @@
 
       <!-- Marca / logo + eslogan -->
       <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard.dashboard') }}">
-        <img src="/static/chatimagen3.png"
+        <img src="/static/img/chatimagen3.png"
              alt="Logo"
              id="icono"
              class="me-2" style="width: 150px; height: 48px; object-fit: contain;">
@@ -149,18 +149,30 @@
       <div class="col-md-4">
         <div class="card card-kpi p-3">
           <h5>Días restantes de licencia:</h5>
-            {% if dias_restantes is not none %}
+          {% if dias_restantes is not none %}
+            {% set color = "" %}
             {% if dias_restantes == 0 %}
-          <h3 class="text-danger">Licencia expirada</h3>
-            {% elif dias_restantes <= 7 %}
-          <h3 class="text-warning">{{ dias_restantes }} día{{ 's' if dias_restantes > 1 else '' }} restante{{ 's' if dias_restantes > 1 else '' }}</h3>
+              {% set color = "text-danger" %}
+            {% elif dias_restantes <= 5 %}
+              {% set color = "text-danger" %}
+            {% elif dias_restantes <= 10 %}
+              {% set color = "text-warning" %}
+            {% elif dias_restantes <= 50 %}
+              {% set color = "text-success" %}
             {% else %}
-          <h3 class="text-success">{{ dias_restantes }} día{{ 's' if dias_restantes > 1 else '' }} restante{{ 's' if dias_restantes > 1 else '' }}</h3>
+              {% set color = "text-primary" %}
             {% endif %}
+                
+            {% if dias_restantes == 0 %}
+              <h3 class="text-danger">Licencia expirada</h3>
             {% else %}
+              <h3 class="{{ color }}">{{ dias_restantes }} día{{ 's' if dias_restantes > 1 else '' }} restante{{ 's' if dias_restantes > 1 else '' }}</h3>
+            {% endif %}
+          {% else %}
             <h3 class="text-muted">Sin licencia válida</h3>
-            {% endif %}
+          {% endif %}
         </div>
+
       </div>
       <div class="col-md-4">
         <div class="card card-kpi p-3">
@@ -205,48 +217,7 @@
     window.onunload = function () { null };
   </script>
   
-    <!-- <script>
-    // Pie Chart
-    new Chart(document.getElementById('chartPie'), {
-      type: 'pie',
-      data: {
-        labels: ['Vehículos', 'Maquinaria', 'Equipos', 'Otros'],
-        datasets: [{
-          data: [30, 25, 20, 25],
-          backgroundColor: ['#42a5f5','#66bb6a','#ffa726','#ef5350']
-        }]
-      }
-    });
 
-    // Bar Chart
-    new Chart(document.getElementById('chartBar'), {
-      type: 'bar',
-      data: {
-        labels: ['Producción','Ventas','Administración','Logística'],
-        datasets: [{
-          label: 'Número de Activos',
-          data: [12, 19, 7, 14],
-          backgroundColor: '#42a5f5'
-        }]
-      },
-      options: {
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-  </script>
-    <script>
-        function salir() {
-            Swal.fire({
-                icon: 'info',
-                title: 'Cerrando sesión...',
-                timer: 1000,
-                showConfirmButton: false,
-                willClose: () => {
-                    window.location.href = "{{ url_for('login.logout') }}";
-                }
-            });
-        }
-    </script> -->
 <script src="static/js/chartbody.js"></script>
 <script src="static/js/logout.js"></script>
 </body>

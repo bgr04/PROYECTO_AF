@@ -6,29 +6,25 @@ import jwt
 from cryptography.hazmat.primitives import serialization
 from pathlib import Path
 
-# ----------------------------
 # Configuración
-# ----------------------------
 BASEDIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-# Ruta al archivo public.pem en la raíz
 PUBLIC_KEY_PATH = os.path.join(BASEDIR, "public.pem")
-# PUBLIC_KEY_PATH = "public.pem"
 JWT_ALGORITHM = "RS256"
 
-# ----------------------------
 # Cargar clave pública
-# ----------------------------
 def load_public_key(path: str = PUBLIC_KEY_PATH) -> bytes:
     return Path(path).read_bytes()
 
-# ----------------------------
 # Validar token JWT
-# ----------------------------
 def validate_license(token: str, expected_rfc: str = None, check_expiry: bool = True) -> Tuple[bool, Union[Dict[str, str], str]]:
     if not token:
         return False, "Token vacío"
 
+    token = token.strip().replace('\n', '').replace('\r', '').replace(' ', '')
+    
+    if token.count('.') != 2:
+        return False, f"Formato de licencia inválido (token recibido: {token[:30]}...)"
+    
     try:
         public_key = load_public_key()
         payload = jwt.decode(token, public_key, algorithms=[JWT_ALGORITHM])
@@ -36,6 +32,8 @@ def validate_license(token: str, expected_rfc: str = None, check_expiry: bool = 
         return False, "Licencia expirada"
     except jwt.InvalidTokenError as e:
         return False, f"Token inválido: {e}"
+    except Exception as e:
+        return False, f"Error al validar la licencia: {e}"
 
     # Validar RFC si se espera
     if expected_rfc:
@@ -64,7 +62,5 @@ def validate_license(token: str, expected_rfc: str = None, check_expiry: bool = 
         "vence": exp_str
     }
 
-# ----------------------------
 # Exponer como módulo
-# ----------------------------
 __all__ = ["validate_license"]

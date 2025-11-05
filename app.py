@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, redirect, url_for, jsonify, r
 from moduls.login import login_bp
 from moduls.dashboard import dashboard_bp
 from moduls.conexionsql import cargar_conexiones
-from moduls.decorators import login_required, login_required_ajax
+from moduls.__init__ import login_required, login_required_ajax
 from moduls.admin import admin_bp 
 from moduls.rutas_usuario import rutas_usuario_bp
 
