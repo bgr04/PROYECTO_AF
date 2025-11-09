@@ -13,32 +13,33 @@ body {
 .navbar .dropdown-toggle {
   color: #d9d9d9 !important;
   font-weight: 500;
+  position: relative;
   transition: all 0.3s ease;
 }
 
 /* Hover links */
 .navbar .nav-link:hover,
 .navbar .dropdown-toggle:hover {
-  color: #181818 !important;
-  background-color: #dcdcdc;
-  border-radius: 6px;
-  padding: 6px 12px;
+  color: #6fd0f7 !important; /* azul brillante */
+  background-color: transparent !important;
 }
 
 /* DROPDOWN MENU */
 .navbar .dropdown-menu {
   border-radius: 8px;
   border: none;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
+  background-color: #eae9e9;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
 }
 
 .navbar .dropdown-item {
+  color: #000000;
   transition: all 0.3s ease;
 }
 
 .navbar .dropdown-item:hover {
-  background-color: #e9ecef;
-  color: #212529;
+  background-color: #9c9c9d;
+  color: #ffffff;
 }
 
 /* CARD KPI */
@@ -56,7 +57,7 @@ body {
   height: 300px;
 }
 
-/* SUBRAYADO ACTIVO (FIJO) */
+/* SUBRAYADO ACTIVO*/
 .navbar .nav-link {
   position: relative;
   color: #ffffff !important;
@@ -70,7 +71,7 @@ body {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 80%;
+  width: 60%;
   height: 2px;
   background-color: #21ade5;
   border-radius: 2px;
@@ -78,6 +79,9 @@ body {
   transition: opacity 0.3s ease;
 }
 
+.navbar .nav-link.active {
+  color: #21ade5 !important;
+}
 /* SIEMPRE visible si está activo */
 .navbar .nav-link.active::after {
   opacity: 1;
@@ -91,7 +95,7 @@ body {
 /* ---------- ▼ FLECHITA CON FA ▼ ----------- */
 /* Flechita visible y alineada */
 .navbar .dropdown-arrow {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   transition: transform 0.3s ease;
   margin-left: 4px;
 }
@@ -99,4 +103,21 @@ body {
 /* Rota la flechita cuando el dropdown está abierto */
 .navbar .nav-item.dropdown.show .dropdown-arrow {
   transform: rotate(180deg);
+}
+
+
+
+  html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Hace que el contenido principal empuje al footer hacia abajo */
+.container {
+  flex: 1;
 }

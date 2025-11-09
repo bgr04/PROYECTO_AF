@@ -1,0 +1,107 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid" id="navbar2">
+
+    <!-- Marca / logo + eslogan -->
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard.dashboard') }}">
+      <img src="/static/img/chatimagen3.png"
+           alt="Logo"
+           id="icono"
+           class="me-2"
+           style="width: 150px; height: 48px; object-fit: contain;">
+      <span id="eslogan" class="fw-semibold"></span>
+    </a>
+
+    <!-- Botón hamburguesa -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarMain" aria-controls="navbarMain"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Contenido colapsable -->
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <!-- Navegación izquierda -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <li class="nav-item">
+          <a class="nav-link {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}"
+             href="{{ url_for('dashboard.dashboard') }}">
+            <i class="fa-solid fa-home me-1"></i> Inicio
+          </a>
+        </li>
+
+        <!-- Dropdown de módulos -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" id="modDropdown"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-layer-group me-1"></i> Catálogos
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="modDropdown">
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_datos_generales') }}">Datos Generales</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_usuarios') }}">Usuarios</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_proveedores') }}">Proveedores</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_clientes') }}">Clientes</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_categoria') }}">Categoría</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_departamento') }}">Departamento</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_tipoEquipos') }}">Tipo de Equipo</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_estado') }}">Estado</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_archivos') }}">Archivos</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.cat_activoFijo') }}">Activo Fijo</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" id="modDropdown2"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-cubes me-1"></i> Control Activo Fijo
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="modDropdown2">
+            <li><a class="dropdown-item" href="{{ url_for('rutas.controlAF_E') }}">Entradas</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.controlAF_S') }}">Salidas</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('rutas.expedienteD') }}">
+            <i class="fa-solid fa-file-lines me-1"></i> Expediente Digital
+          </a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center gap-1" href="#" id="modDropdown3"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-chart-column me-1"></i> Reportes
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="modDropdown3">
+            <li><a class="dropdown-item" href="{{ url_for('rutas.reporteG') }}">General</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('rutas.reporteED') }}">Expediente Digital</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <!-- Usuario -->
+      <div class="dropdown">
+        <button class="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 10 77 77"
+               class="me-2" style="width: 32px; height: 32px;">
+            <circle cx="48" cy="48" r="36" fill="#FF0505"></circle>
+            <circle cx="48" cy="40" r="12" fill="#fff"></circle>
+            <path d="M24,72c6-12,42-12,48,0" fill="#fff"></path>
+          </svg>
+          <span id="name"><strong>{{ usuario }}</strong></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" href="#"><i class="fa fa-user me-2"></i>Información</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="{{ url_for('login.logout') }}">
+              <i class="fa-solid fa-door-open me-1"></i> Salir
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
